@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { runInParallel } from './Service/FetchParallel';
 
-function App() {
+
+const urls = new Array(50).fill(1).map((v,i)=>`https://jsonplaceholder.typicode.com/todos/${i+1}`)
+
+
+const App:React.FunctionComponent=():JSX.Element =>{
+
+  const [state, setstate] = useState<string[]>([])
+
+  useEffect(() => {
+   runInParallel(urls,20).then(setstate)
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          Nethermind Assignment
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
+      <section>
+       {state.map((val,i)=><div key={i}>
+              {val}
+        </div>)}
+      </section>
     </div>
   );
 }
